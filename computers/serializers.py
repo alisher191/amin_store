@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from .models import AccessoriesType, Computer
+from .models import AccessoriesCategory, Computer
 
 
 class AccesoriesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AccessoriesType
+        model = AccessoriesCategory
         fields = ['name', 'price', 'category']

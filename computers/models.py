@@ -1,6 +1,14 @@
 from django.db import models
 
-class AccessoriesType(models.Model):
+
+class Brand(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class AccessoriesCategory(models.Model):
     VIDEO_CARD = 'video_card'
     CPU = 'cpu'
     COOLER = 'cooler'
@@ -39,13 +47,21 @@ class AccessoriesType(models.Model):
         (HEADSET, 'Гарнитура'),
     ]
 
-    name = models.CharField(max_length=255, verbose_name='Название комплектующей')
-    image = models.ImageField(upload_to='accessories_picture/', null=True, blank=True, verbose_name='Изображение')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     category = models.CharField(max_length=100, choices=ACCESSORY_CHOICES, verbose_name='Категория')
+    brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name='Название бренда')
+    model_name = models.CharField(max_length=255, blank=True, verbose_name='Название модели')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', default=0)
+    image = models.ImageField(upload_to='accesories_img/', blank=True, null=True, verbose_name='Изображение')
+    socket = models.CharField(max_length=100, blank=True, null=True, verbose_name='Сокет')
+    cache = models.BigIntegerField(blank=True, null=True, verbose_name='Кэш')
+    cores = models.IntegerField(blank=True, null=True, verbose_name='Количество ядер')
+    processor_frequency = models.IntegerField(blank=True, null=True, verbose_name='Частота процессора')
+    tech_process = models.IntegerField(blank=True, null=True, verbose_name='Техпроцесс')
+    core = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ядро')
+    max_frequency = models.BigIntegerField(blank=True, null=True, verbose_name='Максимальная частота с Turbo Boost')
 
     def __str__(self):
-        return self.name
+        return self.model_name
 
 
 class Computer(models.Model):
@@ -66,98 +82,102 @@ class Computer(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
 
     video_card = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Видео-карта',
-        limit_choices_to={'category': AccessoriesType.VIDEO_CARD},
+        limit_choices_to={'category': AccessoriesCategory.VIDEO_CARD},
         related_name='video_card'
     )
 
     cpu = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Процессор',
-        limit_choices_to={'category': AccessoriesType.CPU},
+        limit_choices_to={'category': AccessoriesCategory.CPU},
         related_name='cpu'
     )
 
     cooler = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Охлаждение',
-        limit_choices_to={'category': AccessoriesType.COOLER},
+        limit_choices_to={'category': AccessoriesCategory.COOLER},
         related_name='cooler'
     )
 
     ram = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Оперативная память',
-        limit_choices_to={'category': AccessoriesType.RAM},
+        limit_choices_to={'category': AccessoriesCategory.RAM},
         related_name='ram'
     )
 
     system_board = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Материнская плата',
-        limit_choices_to={'category': AccessoriesType.SYSTEM_BOARD},
+        limit_choices_to={'category': AccessoriesCategory.SYSTEM_BOARD},
         related_name='system_board'
     )
 
     hhd = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Жёсткий диск',
-        limit_choices_to={'category': AccessoriesType.HHD},
+        limit_choices_to={'category': AccessoriesCategory.HHD},
         related_name='hhd'
     )
 
     ssd_1 = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Диск SSD 1',
-        limit_choices_to={'category': AccessoriesType.SSD},
-        related_name='ssd'
+        limit_choices_to={'category': AccessoriesCategory.SSD},
+        related_name='ssd_1',
+        null=True,
+        blank=True
     )
 
     ssd_2 = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Диск SSD 2',
-        limit_choices_to={'category': AccessoriesType.SSD},
-        related_name='ssd'
+        limit_choices_to={'category': AccessoriesCategory.SSD},
+        related_name='ssd_2',
+        null=True,
+        blank=True
     )
 
     optical_drive = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Оптический привод',
-        limit_choices_to={'category': AccessoriesType.OPTICAL_DRIVE},
+        limit_choices_to={'category': AccessoriesCategory.OPTICAL_DRIVE},
         related_name='optical_drive'
     )
 
     psu = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Блок питания',
-        limit_choices_to={'category': AccessoriesType.PSU},
+        limit_choices_to={'category': AccessoriesCategory.PSU},
         related_name='psu'
     )
 
     body = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Корпус',
-        limit_choices_to={'category': AccessoriesType.BODY},
+        limit_choices_to={'category': AccessoriesCategory.BODY},
         related_name='body'
     )
 
     os = models.ForeignKey(
-        AccessoriesType,
+        AccessoriesCategory,
         on_delete=models.DO_NOTHING,
         verbose_name='Система',
-        limit_choices_to={'category': AccessoriesType.OS},
+        limit_choices_to={'category': AccessoriesCategory.OS},
         related_name='os'
     )
 
