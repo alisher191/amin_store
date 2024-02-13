@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import AccessoriesType, Computer
+
+admin.site.register(AccessoriesType)
+admin.site.register(Computer)
