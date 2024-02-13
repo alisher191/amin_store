@@ -12,6 +12,12 @@ class AccessoriesType(models.Model):
     PSU = 'psu'
     BODY = 'body'
     OS = 'os'
+    WIFI = 'wifi'
+    AUDIO_CARD = 'audio_card'
+    MOUSE = 'mouse'
+    KEYBOARD = 'keyboard'
+    DISPLAY = 'display'
+    HEADSET = 'headset'
 
     ACCESSORY_CHOICES = [
         (VIDEO_CARD, 'Видео-карта'),
@@ -25,20 +31,39 @@ class AccessoriesType(models.Model):
         (PSU, 'Блок питания'),
         (BODY, 'Корпус'),
         (OS, 'Система'),
+        (WIFI, 'WI-FI адаптер'),
+        (AUDIO_CARD, 'Звуковая карта'),
+        (MOUSE, 'Мышь'),
+        (KEYBOARD, 'Клавиатура'),
+        (DISPLAY, 'Монитор'),
+        (HEADSET, 'Гарнитура'),
     ]
 
-    name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=100, choices=ACCESSORY_CHOICES)
+    name = models.CharField(max_length=255, verbose_name='Название комплектующей')
+    image = models.ImageField(upload_to='accessories_picture/', null=True, blank=True, verbose_name='Изображение')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    category = models.CharField(max_length=100, choices=ACCESSORY_CHOICES, verbose_name='Категория')
 
     def __str__(self):
         return self.name
 
 
 class Computer(models.Model):
-    name = models.CharField(max_length=255)
-    descripton = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    POWERFUL = 'powerful'
+    GAMING = 'gaming'
+    CHEAP = 'cheap'
+
+    COMPUTER_CHOICES = [
+        (POWERFUL, 'Мощный компьютер'),
+        (GAMING, 'Игровой компьютер'),
+        (CHEAP, 'Недорогой компьютер')
+    ]
+
+    section = models.CharField(max_length=100, choices=COMPUTER_CHOICES, verbose_name='Раздел')
+    name = models.CharField(max_length=255, verbose_name='Название компьютера')
+    image = models.ImageField(upload_to='computers_picture/', null=True, blank=True, verbose_name='Изображение')
+    descripton = models.TextField(verbose_name='Описание компьютера')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
 
     video_card = models.ForeignKey(
         AccessoriesType,
@@ -88,10 +113,18 @@ class Computer(models.Model):
         related_name='hhd'
     )
 
-    ssd = models.ForeignKey(
+    ssd_1 = models.ForeignKey(
         AccessoriesType,
         on_delete=models.DO_NOTHING,
-        verbose_name='Диск SSD',
+        verbose_name='Диск SSD 1',
+        limit_choices_to={'category': AccessoriesType.SSD},
+        related_name='ssd'
+    )
+
+    ssd_2 = models.ForeignKey(
+        AccessoriesType,
+        on_delete=models.DO_NOTHING,
+        verbose_name='Диск SSD 2',
         limit_choices_to={'category': AccessoriesType.SSD},
         related_name='ssd'
     )

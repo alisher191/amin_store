@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import AccessoriesType
+from .models import AccessoriesType, Computer
 
 
 class AccesoriesSerializer(serializers.ModelSerializer):
