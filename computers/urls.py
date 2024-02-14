@@ -10,4 +10,8 @@ urlpatterns = [
     path('brands-list/', views.BrandsList.as_view()),
     path('brands-create/', views.BrandCreate.as_view()),
     path('brands-<int:pk>/', views.BrandReUpDelete.as_view()),
+
+    path('computers-list/', views.BrandsList.as_view()),
+    path('computers-create/', views.BrandCreate.as_view()),
+    path('computers-<int:pk>/', views.BrandReUpDelete.as_view()),
 ]

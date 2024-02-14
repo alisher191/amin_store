@@ -3,9 +3,12 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from .models import AccessoriesCategory, Brand
-from .serializers import AccesoriesSerializer, BrandSerializers
+from .models import AccessoriesCategory, Brand, Computer
+from .serializers import AccesoriesSerializer, BrandSerializers, ComputerSerializer
 from .permissions import  IsAdminOrReadOnly  # IsOwnerOrReadOnly,
+
+
+#################################### Accessories #############################################
 
 
 class AccesoriesCreate(CreateAPIView):
@@ -26,6 +29,9 @@ class AccessoriesList(ListAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 
+####################################### Brands ###############################################
+
+
 class BrandCreate(CreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializers
@@ -41,4 +47,25 @@ class BrandReUpDelete(RetrieveUpdateDestroyAPIView):
 class BrandsList(ListAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializers
+    permission_classes = [IsAdminOrReadOnly]
+
+
+####################################### Computers #############################################
+
+
+class ComputerCreate(CreateAPIView):
+    queryset = Computer.objects.all()
+    serializer_class = ComputerSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ComputerReUpDelete(RetrieveUpdateDestroyAPIView):
+    queryset = Computer.objects.all()
+    serializer_class = ComputerSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class ComputersList(ListAPIView):
+    queryset = Computer.objects.all()
+    serializer_class = ComputerSerializer
     permission_classes = [IsAdminOrReadOnly]

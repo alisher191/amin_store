@@ -27,3 +27,9 @@ class BrandSerializers(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = '__all__'
+
+
+class ComputerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Computer
+        fields = '__all__'
