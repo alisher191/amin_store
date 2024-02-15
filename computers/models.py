@@ -53,6 +53,10 @@ class Brand(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Производитель'
+        verbose_name_plural = 'Производители'
 
 
 class VideoCard(models.Model):
@@ -65,6 +69,10 @@ class VideoCard(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Видеокарта'
+        verbose_name_plural = 'Видеокарты'
 
 
 class Cpu(models.Model):
@@ -74,18 +82,23 @@ class Cpu(models.Model):
     socket = models.CharField(max_length=100, blank=True, null=True, verbose_name='Сокет')
     cores_quantity = models.IntegerField(blank=True, null=True, verbose_name='Количество ядер')
     processor_frequency = models.CharField(max_length=200, blank=True, null=True, verbose_name='Частота процессора')
-    core = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ядро')
+    core = models.CharField(max_length=255, blank=True,null=True, verbose_name='Ядро')
     max_frequency_TB = models.CharField(max_length=255, blank=True, null=True, verbose_name='Максимальная частота с Turbo Boost')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Процессор'
+        verbose_name_plural = 'Процессоры'
 
 
 class Cooler(models.Model):
-    img = models.ImageField(upload_to='coolerImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='coolerImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     radiator_material = models.CharField(max_length=255, verbose_name='Материал радиатора')
     height = models.IntegerField(default=0, verbose_name='Высота кулера')
@@ -100,10 +113,15 @@ class Cooler(models.Model):
     water_block_material = models.CharField(max_length=255, null=True, blank=True, verbose_name='Материал водоблока')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Охлаждение'
+        verbose_name_plural = 'Охлаждение'
 
 
 class Ram(models.Model):
@@ -118,14 +136,19 @@ class Ram(models.Model):
     voltage = models.CharField(max_length=255, verbose_name='Напряжение питания')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Оперативная память'
+        verbose_name_plural = 'Оперативная память'
 
 
 class Motherboard(models.Model):
-    img = models.ImageField(upload_to='motherboardImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='motherboardImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     form_factor = models.CharField(max_length=255, verbose_name='Форм-фактор')
     slots = models.IntegerField(default=0, verbose_name='Количество слотов памяти')
@@ -136,14 +159,19 @@ class Motherboard(models.Model):
     m_2_slots_type = models.TextField(blank=True, null=True, verbose_name='Тип слотов M.2')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Материнская плата'
+        verbose_name_plural = 'Материнскае платы'
 
 
 class Hard(models.Model):
-    img = models.ImageField(upload_to='hardDiskImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='hardDiskImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     hard_type = models.CharField(max_length=255, verbose_name='Тип')
     volume = models.IntegerField(default=0, verbose_name='Объём')
@@ -152,14 +180,19 @@ class Hard(models.Model):
     connect = models.CharField(max_length=255, verbose_name='Подключение')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Жёсткий диск'
+        verbose_name_plural = 'Жёсткие диски'
 
 
 class Ssd(models.Model):
-    img = models.ImageField(upload_to='ssdImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='ssdImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     volume = models.IntegerField(default=0, verbose_name='Ëмкость')
     form_factor = models.CharField(max_length=255, verbose_name='Форм-фактор')
@@ -170,10 +203,15 @@ class Ssd(models.Model):
     recording = models.CharField(max_length=255, verbose_name='Скорость записи')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'SSD диск'
+        verbose_name_plural = 'SSD диски'
 
 
 class DVDDrive(models.Model):
@@ -185,7 +223,7 @@ class DVDDrive(models.Model):
         (OUTSIDE, 'Внешний'),
     ]
 
-    img = models.ImageField(upload_to='dvdDriveImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='dvdDriveImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     drive_type = models.CharField(max_length=255, verbose_name='Тип привода')
     connection_interface = models.CharField(max_length=255, verbose_name='Интерфейс подключения')
@@ -193,27 +231,37 @@ class DVDDrive(models.Model):
     placement = models.CharField(max_length=255, verbose_name='placement', choices=IN_OUT_CHOICES)
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'DVD-привод'
+        verbose_name_plural = 'DVD-приводы'
 
 
 class PowerUnit(models.Model):
-    img = models.ImageField(upload_to='powerUnitImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='powerUnitImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     power = models.IntegerField(default=0, verbose_name='Мощность')
     standart = models.CharField(max_length=255, verbose_name='Стандарт')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Блок питания'
+        verbose_name_plural = 'Блоки питания'
 
 
 class Body(models.Model):
-    img = models.ImageField(upload_to='bodyImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='bodyImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     form_factor = models.CharField(max_length=255, verbose_name='Форм-фактор')
     standart_size = models.CharField(max_length=255, verbose_name='Типоразмер')
@@ -225,14 +273,19 @@ class Body(models.Model):
     remove_air_filter = models.CharField(max_length=255, verbose_name='Съемный воздушный фильтр', choices=YES_NO_CHOICES)
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Корпус'
+        verbose_name_plural = 'Корпусы'
 
 
 class WiFiAdapter(models.Model):
-    img = models.ImageField(upload_to='wifiImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='wifiImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     form_factor = models.CharField(max_length=255, verbose_name='Форм-фактор')
     wireless_standart = models.CharField(max_length=255, verbose_name='Стандарт беспроводной связи')
@@ -241,14 +294,19 @@ class WiFiAdapter(models.Model):
     max_wireless_speed = models.CharField(max_length=255, verbose_name='Макс. скорость беспроводного соединения')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Wi-Fi адаптер'
+        verbose_name_plural = 'Wi-Fi адаптеры'
 
 
 class AudioCard(models.Model):
-    img = models.ImageField(upload_to='audioCardImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='audioCardImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     manufacturer = models.CharField(max_length=255, verbose_name='Производитель')
     placement_type = models.CharField(max_length=255, verbose_name='Тип расположения')
@@ -262,21 +320,30 @@ class AudioCard(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Звуковая карта'
+        verbose_name_plural = 'Звуковые карты'
 
 
 class OSystem(models.Model):
-    img = models.ImageField(upload_to='ssdImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='ssdImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Операционная система'
+        verbose_name_plural = 'Операционные системы'
 
 
 class Mouse(models.Model):
-    img = models.ImageField(upload_to='ssdImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='ssdImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     mouse_type = models.CharField(max_length=255, verbose_name='Тип')
     connection_interface = models.CharField(max_length=255, verbose_name='Интерфейс подключения')
@@ -289,14 +356,19 @@ class Mouse(models.Model):
     manufacturer = models.CharField(max_length=255, verbose_name='Производитель')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Мышь'
+        verbose_name_plural = 'Мыши'
 
 
 class Keyboard(models.Model):
-    img = models.ImageField(upload_to='ssdImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='ssdImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     equipment = models.CharField(max_length=255, verbose_name='Комплектация')
     appointment = models.CharField(max_length=255, verbose_name='Назначение')
@@ -307,10 +379,15 @@ class Keyboard(models.Model):
     keys = models.IntegerField(default=0, verbose_name='Количество клавиш')
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Клавиатура'
+        verbose_name_plural = 'Клавиатуры'
 
 
 class Screen(models.Model):
@@ -321,7 +398,7 @@ class Screen(models.Model):
         (NOO, "нет")
     ]
 
-    img = models.ImageField(upload_to='ssdImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='ssdImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     diagonal = models.CharField(max_length=255, verbose_name='Диагональ')
     screen_resolution = models.CharField(max_length=255, verbose_name='Разрешение')
@@ -333,10 +410,15 @@ class Screen(models.Model):
     height_adjustment = models.CharField(max_length=255, verbose_name='Регулировка по высоте', choices=CHOICES)
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Монитор'
+        verbose_name_plural = 'Мониторы'
 
 
 class Headset(models.Model):
@@ -348,7 +430,7 @@ class Headset(models.Model):
         (NOU, "нет")
     ]
 
-    img = models.ImageField(upload_to='ssdImages/', null=True, blank=True, verbose_name='Изображение')
+    img = models.ImageField(upload_to='ssdImages/',null=True, blank=True, verbose_name='Изображение')
     name = models.CharField(max_length=255, verbose_name='Название')
     manufacturer = models.CharField(max_length=255, verbose_name='Производитель')
     headset_type = models.CharField(max_length=255, verbose_name='Тип')
@@ -371,10 +453,15 @@ class Headset(models.Model):
     case_included = models.CharField(max_length=255, verbose_name='Чехол/футляр в комплекте', choices=Y_N_CHOICES)
 
     brand_name = models.ForeignKey(Brand, on_delete=models.DO_NOTHING)
-    category_name = models.CharField(max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
+    category_name = models.CharField(
+        max_length=200, choices=ACCESSORY_CATEGORY_CHOICES)
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Гарнитура'
+        verbose_name_plural = 'Гарнитуры'
 
 
 class Computer(models.Model):
@@ -395,58 +482,63 @@ class Computer(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
 
     video_card = models.ForeignKey(
-        VideoCard,
-        on_delete=models.DO_NOTHING,
-        verbose_name='Видео-карта',
-        limit_choices_to={'category': VideoCard.VIDEO_CARD},
-        related_name='video_card'
-    )
+    VideoCard,
+    on_delete=models.DO_NOTHING,
+    verbose_name='Видео-карта',
+    related_name='video_card',
+        null=True,
+        blank=True
+)
 
     cpu = models.ForeignKey(
         Cpu,
         on_delete=models.DO_NOTHING,
         verbose_name='Процессор',
-        limit_choices_to={'category': Cpu.CPU},
-        related_name='cpu'
+        related_name='cpu',
+        null=True,
+        blank=True
     )
 
     cooler = models.ForeignKey(
         Cooler,
         on_delete=models.DO_NOTHING,
         verbose_name='Охлаждение',
-        limit_choices_to={'category': Cooler.COOLER},
-        related_name='cooler'
+        related_name='cooler',
+        null=True,
+        blank=True
     )
 
     ram = models.ForeignKey(
         Ram,
         on_delete=models.DO_NOTHING,
         verbose_name='Оперативная память',
-        limit_choices_to={'category': Ram.RAM},
-        related_name='ram'
+        related_name='ram',
+        null=True,
+        blank=True
     )
 
     system_board = models.ForeignKey(
         Motherboard,
         on_delete=models.DO_NOTHING,
         verbose_name='Материнская плата',
-        limit_choices_to={'category': Motherboard.SYSTEM_BOARD},
-        related_name='system_board'
+        related_name='system_board',
+        null=True,
+        blank=True
     )
 
     hhd = models.ForeignKey(
         Hard,
         on_delete=models.DO_NOTHING,
         verbose_name='Жёсткий диск',
-        limit_choices_to={'category': Hard.HHD},
-        related_name='hhd'
+        related_name='hhd',
+        null=True,
+        blank=True
     )
 
     ssd_1 = models.ForeignKey(
         Ssd,
         on_delete=models.DO_NOTHING,
         verbose_name='Диск SSD 1',
-        limit_choices_to={'category': Ssd.SSD},
         related_name='ssd_1',
         null=True,
         blank=True
@@ -456,7 +548,6 @@ class Computer(models.Model):
         Ssd,
         on_delete=models.DO_NOTHING,
         verbose_name='Диск SSD 2',
-        limit_choices_to={'category': Ssd.SSD},
         related_name='ssd_2',
         null=True,
         blank=True
@@ -466,49 +557,59 @@ class Computer(models.Model):
         DVDDrive,
         on_delete=models.DO_NOTHING,
         verbose_name='Оптический привод',
-        limit_choices_to={'category': DVDDrive.OPTICAL_DRIVE},
-        related_name='optical_drive'
+        related_name='optical_drive',
+        null=True,
+        blank=True
     )
 
     psu = models.ForeignKey(
         PowerUnit,
         on_delete=models.DO_NOTHING,
         verbose_name='Блок питания',
-        limit_choices_to={'category': PowerUnit.PSU},
-        related_name='psu'
+        related_name='psu',
+        null=True,
+        blank=True
     )
 
     body = models.ForeignKey(
         Body,
         on_delete=models.DO_NOTHING,
         verbose_name='Корпус',
-        limit_choices_to={'category': Body.BODY},
-        related_name='body'
+        related_name='body',
+        null=True,
+        blank=True
     )
 
     os = models.ForeignKey(
         OSystem,
         on_delete=models.DO_NOTHING,
-        verbose_name='Система',
-        limit_choices_to={'category': OSystem.OS},
-        related_name='os'
+        verbose_name='Операционная система',
+        related_name='os',
+        null=True,
+        blank=True
     )
 
     wifi = models.ForeignKey(
         WiFiAdapter,
         on_delete=models.DO_NOTHING,
-        verbose_name='Система',
-        limit_choices_to={'category': WiFiAdapter.WIFI},
-        related_name='os'
+        verbose_name='Wi-Fi Адаптер',
+        related_name='wifi',
+        null=True,
+        blank=True
     )
 
     audio_card = models.ForeignKey(
         AudioCard,
         on_delete=models.DO_NOTHING,
-        verbose_name='Система',
-        limit_choices_to={'category': AudioCard.AUDIO_CARD},
-        related_name='os'
+        verbose_name='Звуковая карта',
+        related_name='audio_card',
+        null=True,
+        blank=True
     )
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = 'Компьютер'
+        verbose_name_plural = 'Компьютеры'
