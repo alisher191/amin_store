@@ -1,9 +1,12 @@
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
+import django_filters
 
 from . import models
 from . import serializers
 from .permissions import  IsAdminOrReadOnly
+from .filters import ComputerFilter
 
 
 ####################################### Brands ###############################################
@@ -43,9 +46,23 @@ class ComputerReUpDelete(RetrieveUpdateDestroyAPIView):
 
 
 class ComputersList(ListAPIView):
-    queryset = models.Computer.objects.all()
     serializer_class = serializers.ComputerSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filterset_class = ComputerFilter
+    queryset = models.Computer.objects.all()
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['name', 'descripton', 'section', 'cpu__name', 'price']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Применение сортировки
+        sort_by = self.request.query_params.get('sort[sortBy]')
+        sort_direction = self.request.query_params.get('sort[sortDirection]')
+        if sort_by and sort_direction:
+            queryset = queryset.order_by(f'{sort_direction.lower()}{sort_by}')
+
+        return queryset
 
 
 ####################################### VideoCard #############################################
