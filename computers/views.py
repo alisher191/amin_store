@@ -1,30 +1,50 @@
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters, pagination
+import django_filters
 
 from . import models
 from . import serializers
 from .permissions import  IsAdminOrReadOnly
+from .filters import ComputerFilter, ProductFilter
 
 
-####################################### Brands ###############################################
+####################################### Product ###############################################
 
 
-class BrandCreate(CreateAPIView):
-    queryset = models.Brand.objects.all()
-    serializer_class = serializers.BrandSerializers
+class ProductCreate(CreateAPIView):
+    queryset = models.Product.objects.all()
+    serializer_class = serializers.ProductSerializers
     permission_classes = [IsAuthenticated]
 
 
-class BrandReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Brand.objects.all()
-    serializer_class = serializers.BrandSerializers
+class ProductReUpDelete(RetrieveUpdateDestroyAPIView):
+    queryset = models.Product.objects.all()
+    serializer_class = serializers.ProductSerializers
     permission_classes = [IsAdminOrReadOnly]
 
 
-class BrandsList(ListAPIView):
-    queryset = models.Brand.objects.all()
-    serializer_class = serializers.BrandSerializers
+class ProductList(ListAPIView):
+    queryset = models.Product.objects.all()
+    serializer_class = serializers.ProductSerializers
     permission_classes = [IsAdminOrReadOnly]
+
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_class = ProductFilter
+    pagination_class = pagination.LimitOffsetPagination
+    ordering_fields = ['powerScale', 'PUBLISHED_AT', 'importance', 'year']
+    search_fields = ['title', 'sub_title', 'description', 'brand', 'model', 'category']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Применение сортировки
+        sort_by = self.request.query_params.get('sort[sortBy]')
+        sort_direction = self.request.query_params.get('sort[sortDirection]')
+        if sort_by and sort_direction:
+            queryset = queryset.order_by(f'{sort_direction.lower()}{sort_by}')
+
+        return queryset
 
 
 ####################################### Computers #############################################
@@ -42,364 +62,22 @@ class ComputerReUpDelete(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class ComputersList(ListAPIView):
-    queryset = models.Computer.objects.all()
+class ComputerListView(ListAPIView):
     serializer_class = serializers.ComputerSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filterset_class = ComputerFilter
+    queryset = models.Computer.objects.all()
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['title', 'brand', 'model', 'category', 'cpu__title', 'videoCard__title']
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
-####################################### VideoCard #############################################
+        # Применение сортировки
+        sort_by = self.request.query_params.get('sort[sortBy]')
+        sort_direction = self.request.query_params.get('sort[sortDirection]')
+        if sort_by and sort_direction:
+            queryset = queryset.order_by(f'{sort_direction.lower()}{sort_by}')
 
+        return queryset
 
-class VideoCardCreate(CreateAPIView):
-    queryset = models.VideoCard.objects.all()
-    serializer_class = serializers.VideoCardSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class VideoCardReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.VideoCard.objects.all()
-    serializer_class = serializers.VideoCardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class VideoCardList(ListAPIView):
-    queryset = models.VideoCard.objects.all()
-    serializer_class = serializers.VideoCardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### CPU #############################################
-
-
-class CpuCreate(CreateAPIView):
-    queryset = models.Cpu.objects.all()
-    serializer_class = serializers.CpuSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class CpuCardReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Cpu.objects.all()
-    serializer_class = serializers.CpuSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class CpuCardList(ListAPIView):
-    queryset = models.Cpu.objects.all()
-    serializer_class = serializers.CpuSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Cooler #############################################
-
-
-class CoolerCreate(CreateAPIView):
-    queryset = models.Cooler.objects.all()
-    serializer_class = serializers.CoolerSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class CoolerReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Cooler.objects.all()
-    serializer_class = serializers.CoolerSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class CoolerList(ListAPIView):
-    queryset = models.Cooler.objects.all()
-    serializer_class = serializers.CoolerSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Ram #############################################
-
-
-class RamCreate(CreateAPIView):
-    queryset = models.Ram.objects.all()
-    serializer_class = serializers.RamSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class RamReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Ram.objects.all()
-    serializer_class = serializers.RamSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class RamdList(ListAPIView):
-    queryset = models.Ram.objects.all()
-    serializer_class = serializers.RamSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Motherboard #############################################
-
-
-class MotherboardCreate(CreateAPIView):
-    queryset = models.Motherboard.objects.all()
-    serializer_class = serializers.MotherboardSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class MotherboardReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Motherboard.objects.all()
-    serializer_class = serializers.MotherboardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class MotherboardList(ListAPIView):
-    queryset = models.Motherboard.objects.all()
-    serializer_class = serializers.MotherboardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Hard #############################################
-
-
-class HardCreate(CreateAPIView):
-    queryset = models.Hard.objects.all()
-    serializer_class = serializers.HardSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class HardReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Hard.objects.all()
-    serializer_class = serializers.HardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class HardList(ListAPIView):
-    queryset = models.Hard.objects.all()
-    serializer_class = serializers.HardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Ssd #############################################
-
-
-class SsdCreate(CreateAPIView):
-    queryset = models.Ssd.objects.all()
-    serializer_class = serializers.SsdSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class SsdReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Ssd.objects.all()
-    serializer_class = serializers.SsdSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class SsdList(ListAPIView):
-    queryset = models.Ssd.objects.all()
-    serializer_class = serializers.SsdSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### DVDDrive #############################################
-
-
-class DVDDriveCreate(CreateAPIView):
-    queryset = models.DVDDrive.objects.all()
-    serializer_class = serializers.DVDDriveSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class DVDDriveReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.DVDDrive.objects.all()
-    serializer_class = serializers.DVDDriveSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class DVDDriveList(ListAPIView):
-    queryset = models.DVDDrive.objects.all()
-    serializer_class = serializers.DVDDriveSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### PowerUnit #############################################
-
-
-class PowerUnitCreate(CreateAPIView):
-    queryset = models.PowerUnit.objects.all()
-    serializer_class = serializers.PowerUnitSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class PowerUnitReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.PowerUnit.objects.all()
-    serializer_class = serializers.PowerUnitSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class PowerUnitList(ListAPIView):
-    queryset = models.PowerUnit.objects.all()
-    serializer_class = serializers.PowerUnitSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Body #############################################
-
-
-class BodyCreate(CreateAPIView):
-    queryset = models.Body.objects.all()
-    serializer_class = serializers.BodySerializer
-    permission_classes = [IsAuthenticated]
-
-
-class BodyReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Body.objects.all()
-    serializer_class = serializers.BodySerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class BodyList(ListAPIView):
-    queryset = models.Body.objects.all()
-    serializer_class = serializers.BodySerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### WiFiAdapter #############################################
-
-
-class WiFiAdapterCreate(CreateAPIView):
-    queryset = models.WiFiAdapter.objects.all()
-    serializer_class = serializers.WiFiAdapterSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class WiFiAdapterReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.WiFiAdapter.objects.all()
-    serializer_class = serializers.WiFiAdapterSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class WiFiAdapterList(ListAPIView):
-    queryset = models.WiFiAdapter.objects.all()
-    serializer_class = serializers.WiFiAdapterSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### AudioCard #############################################
-
-
-class AudioCardCreate(CreateAPIView):
-    queryset = models.AudioCard.objects.all()
-    serializer_class = serializers.AudioCardSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class AudioCardReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.AudioCard.objects.all()
-    serializer_class = serializers.AudioCardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class AudioCardList(ListAPIView):
-    queryset = models.AudioCard.objects.all()
-    serializer_class = serializers.AudioCardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### OSystem #############################################
-
-
-class OSystemCreate(CreateAPIView):
-    queryset = models.OSystem.objects.all()
-    serializer_class = serializers.OSystemSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class OSystemReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.OSystem.objects.all()
-    serializer_class = serializers.OSystemSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class OSystemList(ListAPIView):
-    queryset = models.OSystem.objects.all()
-    serializer_class = serializers.OSystemSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Mouse #############################################
-
-
-class MouseCreate(CreateAPIView):
-    queryset = models.Mouse.objects.all()
-    serializer_class = serializers.MouseCardSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class MouseReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Mouse.objects.all()
-    serializer_class = serializers.MouseCardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class MouseList(ListAPIView):
-    queryset = models.Mouse.objects.all()
-    serializer_class = serializers.MouseCardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Keyboard #############################################
-
-
-class KeyboardCreate(CreateAPIView):
-    queryset = models.Keyboard.objects.all()
-    serializer_class = serializers.KeyboardSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class KeyboardReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Keyboard.objects.all()
-    serializer_class = serializers.KeyboardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class KeyboardList(ListAPIView):
-    queryset = models.Keyboard.objects.all()
-    serializer_class = serializers.KeyboardSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Screen #############################################
-
-
-class ScreenCreate(CreateAPIView):
-    queryset = models.Screen.objects.all()
-    serializer_class = serializers.ScreenSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class ScreenReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Screen.objects.all()
-    serializer_class = serializers.ScreenSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class ScreenList(ListAPIView):
-    queryset = models.Screen.objects.all()
-    serializer_class = serializers.ScreenSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-####################################### Headset #############################################
-
-
-class HeadsetCreate(CreateAPIView):
-    queryset = models.Headset.objects.all()
-    serializer_class = serializers.HeadsetSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class HeadsetReUpDelete(RetrieveUpdateDestroyAPIView):
-    queryset = models.Headset.objects.all()
-    serializer_class = serializers.HeadsetSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class HeadsetList(ListAPIView):
-    queryset = models.Headset.objects.all()
-    serializer_class = serializers.HeadsetSerializer
-    permission_classes = [IsAdminOrReadOnly]
